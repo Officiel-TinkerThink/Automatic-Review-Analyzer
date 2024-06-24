@@ -17,7 +17,8 @@ This project focuses on implementing and comparing three variants of the Percept
 2. [Algorithms](#algorithms)
 3. [Usage](#usage)
 4. [Future Work](#future-work)
-5. [Contributing](#contributing)
+5. [Recommended papers on Algorithms](#recommended-papers-on-algorithms)
+6. [Appendix](#appendix)
 
 ## Introduction
 
@@ -64,9 +65,39 @@ Possible extensions to this project include:
 - Experimenting with other machine learning algorithms such as logistic regression, SVM, or neural networks.
 - Exploring more complex sentiment analysis tasks with multi-class classification or aspect-based sentiment analysis.
 
-## Contributing
+### Recommended Papers on Algorithms
 
-Contributions are welcome! If you have any improvements or new ideas, please fork the repository and submit a pull request. Make sure to follow the project's coding style and include appropriate tests for your changes
+To understand the foundational and advanced algorithms, you should read the following papers:
+
+1. **Novikoff, A. B. J. (1962). On convergence proofs for perceptrons.**  
+   _Symposium on the Mathematical Theory of Automata, 12-16 June, 1962_  
+   This paper discusses the convergence proofs for perceptrons, providing foundational insights into their behavior and performance.
+
+2. **Shalev-Shwartz, S., Singer, Y., & Srebro, N. (2007). Pegasos: Primal Estimated sub-GrAdient SOlver for SVM.**  
+   _Proceedings of the 24th International Conference on Machine Learning (ICML 2007), pp. 807-814._  
+   This paper presents Pegasos, an efficient algorithm for solving Support Vector Machine (SVM) optimization problems using stochastic gradient descent.
+
+
+### Appendix
+
+#### On Convergence Proofs for Perceptrons - Novikoff (1962)
+
+- **Abstract:** This paper provides the theoretical foundations for the convergence of perceptrons. It demonstrates that perceptrons will converge to a solution in a finite number of steps, given that the data is linearly separable.
+- **Key Contributions:**
+  - Proof of convergence for the perceptron algorithm.
+  - Analysis of the perceptron's behavior under different conditions.
+- **Importance:** This work laid the groundwork for understanding the learning dynamics of perceptrons and influenced subsequent research in neural networks and machine learning.
+
+#### Pegasos: Primal Estimated sub-GrAdient SOlver for SVM - Shalev-Shwartz et al. (2007)
+
+- **Abstract:** Pegasos is introduced as a new stochastic gradient descent algorithm for solving the optimization problem posed by Support Vector Machines (SVMs). The paper provides a detailed analysis of its convergence properties and computational efficiency.
+- **Key Contributions:**
+  - Development of the Pegasos algorithm.
+  - Empirical evaluation demonstrating the efficiency and scalability of Pegasos.
+  - Theoretical analysis proving the convergence rate of the algorithm.
+- **Importance:** Pegasos significantly improves the efficiency of SVM training, making it feasible to apply SVMs to large-scale machine learning problems.
+
+
 
 
 
