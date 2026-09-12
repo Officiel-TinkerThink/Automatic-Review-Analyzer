@@ -1,0 +1,9 @@
+{
+  "name": "automatic-review-analyzer",
+  "version": "2.0.0",
+  "description": "Sentiment classifiers from scratch — perceptron, average perceptron, Pegasos — trained live in the browser on 4,000 food reviews, with word-level explanations.",
+  "private": true,
+  "scripts": { "start": "python3 -m http.server 8000 --directory docs", "test": "node --test tests/*.test.js", "demo:record": "node scripts/record_demo.js" },
+  "devDependencies": { "playwright": "^1.62.1" },
+  "license": "MIT"
+}

@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Review Analyzer</title>
+  <meta name="description" content="Sentiment classifiers built from scratch — perceptron, average perceptron and Pegasos — trained live in your browser on 4,000 food reviews. Type a review and see which words decide the verdict." />
+  <meta property="og:title" content="Review Analyzer — perceptrons trained in your browser" />
+  <meta property="og:description" content="Type a review, see the sentiment and the words that decided it; compare three linear classifiers as they learn." />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='18' fill='%23064e3b'/><text x='50' y='70' font-size='56' text-anchor='middle'>👍</text></svg>" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-icon" aria-hidden="true">💬</span>
+      <div>
+        <h1>Review Analyzer</h1>
+        <p>Three linear classifiers from scratch, trained live on 4,000 food reviews</p>
+      </div>
+    </div>
+    <nav class="tabs" role="tablist">
+      <button class="tab active" data-tab="analyze" role="tab">Analyze</button>
+      <button class="tab" data-tab="train" role="tab">Train &amp; compare</button>
+      <button class="tab" data-tab="words" role="tab">Words</button>
+      <button class="tab" data-tab="reviews" role="tab">Reviews</button>
+      <button class="tab" data-tab="about" role="tab">About</button>
+    </nav>
+    <div class="topbar-actions">
+      <a class="btn btn-ghost" href="https://github.com/Officiel-TinkerThink/Automatic-Review-Analyzer" target="_blank" rel="noopener">GitHub ↗</a>
+    </div>
+  </header>
+
+  <main class="page">
+    <!-- ============================================================ ANALYZE -->
+    <section class="tab-body active" data-tab="analyze">
+      <div class="grid2">
+        <div class="card">
+          <div class="row-head">
+            <h2>Type a review</h2>
+            <label class="inline">Model <select id="anModel">
+              <option value="pegasos">Pegasos (T=25, λ=0.01)</option>
+              <option value="average">Average perceptron (T=25)</option>
+              <option value="perceptron">Perceptron (T=25)</option>
+            </select></label>
+          </div>
+          <textarea id="reviewText" rows="5" spellcheck="true" placeholder="e.g. These chips were surprisingly delicious, but the bag was half empty and the price is a joke."></textarea>
+          <div class="inline examples" id="examples"></div>
+          <div class="verdict" id="verdict"></div>
+          <div class="highlight" id="highlight"></div>
+          <p class="hint">Each word is coloured by its weight in the classifier — green pushes towards positive, red towards negative. The verdict is the sign of the sum (plus a bias).</p>
+        </div>
+        <aside class="card">
+          <h2>What decided it</h2>
+          <div class="contrib" id="contrib"></div>
+          <div class="stat-tiles" id="anStats"></div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- ============================================================ TRAIN -->
+    <section class="tab-body" data-tab="train">
+      <div class="card">
+        <h2>Train &amp; compare</h2>
+        <p class="lead">All three algorithms make one pass over the 4,000 training reviews per epoch, in the same fixed order used in the course. After each epoch the model is scored on the 500 validation reviews. The features are a binary bag of words — 13k dimensions, built in your browser.</p>
+        <div class="toolbar">
+          <label>Epochs T <select id="trT"><option value="5">5</option><option value="10">10</option><option value="25" selected>25</option><option value="50">50</option></select></label>
+          <label>Pegasos λ <select id="trL"><option value="0.1">0.1</option><option value="0.01" selected>0.01</option><option value="0.001">0.001</option><option value="0.0001">0.0001</option></select></label>
+          <label class="check"><input type="checkbox" id="trStop" /> remove stopwords</label>
+          <label class="check"><input type="checkbox" id="trCounts" /> word counts instead of binary</label>
+          <label class="check"><input type="checkbox" id="trBigrams" /> add bigrams (slower)</label>
+          <button class="btn btn-primary" id="btnTrain">▶ Train all three</button>
+          <button class="btn" id="btnSweep">Sweep T and λ</button>
+        </div>
+        <div class="stat-tiles" id="trStats"></div>
+        <div class="chart-wrap">
+          <div class="chart-head"><h3>Validation accuracy per epoch</h3><div class="legend" id="legend"></div></div>
+          <svg id="chart" class="chart" role="img" aria-label="Validation accuracy per epoch"></svg>
+          <div class="chart-tooltip" id="tip" hidden></div>
+        </div>
+        <div id="sweep"></div>
+      </div>
+    </section>
+
+    <!-- ============================================================ WORDS -->
+    <section class="tab-body" data-tab="words">
+      <div class="card">
+        <div class="row-head">
+          <h2>Most explanatory words</h2>
+          <label class="inline">Model <select id="wModel"><option value="pegasos">Pegasos</option><option value="average">Average perceptron</option><option value="perceptron">Perceptron</option></select></label>
+        </div>
+        <p class="lead">The largest weights in θ. A linear classifier is just a weighted vote: these are the words with the biggest votes.</p>
+        <div class="grid2 even">
+          <div><h3>Positive</h3><div class="wordbars" id="posWords"></div></div>
+          <div><h3>Negative</h3><div class="wordbars" id="negWords"></div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================ REVIEWS -->
+    <section class="tab-body" data-tab="reviews">
+      <div class="card">
+        <div class="row-head">
+          <h2>Browse the test set</h2>
+          <div class="inline">
+            <label>Show <select id="rvFilter"><option value="all">all 500</option><option value="wrong">mistakes only</option><option value="pos">predicted positive</option><option value="neg">predicted negative</option></select></label>
+            <input type="text" id="rvSearch" placeholder="search text…" />
+          </div>
+        </div>
+        <p class="hint" id="rvNote"></p>
+        <div class="reviews" id="reviewList"></div>
+      </div>
+    </section>
+
+    <!-- ============================================================ ABOUT -->
+    <section class="tab-body" data-tab="about">
+      <div class="grid2 about">
+        <article class="card prose">
+          <h2>Three ways to learn a line</h2>
+          <p>Every review becomes a vector of 13,000 zeros and ones — one per word in the training vocabulary. A linear classifier scores it as <code>θ·x + θ₀</code> and predicts the sign. The three algorithms differ only in how they move θ:</p>
+          <ul>
+            <li><b>Perceptron</b> — on a mistake, <code>θ ← θ + y·x</code>. Simple, converges if the data is separable, and it is: 99 % training accuracy but only ~80 % on new reviews.</li>
+            <li><b>Average perceptron</b> — same updates, but the answer is the <em>average</em> of every θ seen during training. Cheap insurance against the last few updates overfitting.</li>
+            <li><b>Pegasos</b> — stochastic sub-gradient descent on the SVM objective: shrink θ by <code>(1 − ηλ)</code> every step and add <code>η·y·x</code> when the margin is below 1, with <code>η = 1/√t</code>. The regulariser λ trades training accuracy for margin.</li>
+          </ul>
+          <p>Because the model is linear, it is completely explainable: the Analyze tab colours every word by its weight, and the Words tab lists the biggest ones.</p>
+        </article>
+        <article class="card prose">
+          <h2>What the course found</h2>
+          <p>The MITx project tunes T and λ on the validation set and reports test accuracy around <b>80–82 %</b> for all three methods; stopword removal and count features don't help much, bigrams a little. Press <b>Sweep T and λ</b> on the Train tab to reproduce that table in your browser.</p>
+          <h3>Implementation notes</h3>
+          <ul>
+            <li><code>docs/js/sentiment.js</code> ports <code>project1.py</code> one-to-one (same tokeniser, same update rules, same 1e-4 / 1e-5 numerical guards, same fixed training order from <code>4000.txt</code>).</li>
+            <li>Features are sparse maps, Pegasos applies its shrink lazily through a global scale, and the average perceptron uses the lazy-averaging trick — so a full 25-epoch run of all three takes about a second.</li>
+          </ul>
+          <p class="hint">Data: 5,000 Amazon fine-food reviews from the MITx 6.86x project (4,000 train / 500 validation / 500 test).</p>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">Built by <a href="https://github.com/Officiel-TinkerThink" target="_blank" rel="noopener">Wahyu Bornok Augus Sinurat</a> · MITx 6.86x project 1 · everything runs in your browser.</footer>
+  <div class="toasts" id="toasts" aria-live="polite"></div>
+
+  <script src="js/sentiment.js"></script>
+  <script src="js/chart.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

@@ -1,5 +1,53 @@
-# Automatic-Review-Analyzer
-This Project of Machine Learning is created in order to fulfill project requirements provided by MITx
+<div align="center">
+
+# 💬 Review Analyzer
+
+**Try it now → [officiel-tinkerthink.github.io/Automatic-Review-Analyzer](https://officiel-tinkerthink.github.io/Automatic-Review-Analyzer/)**
+
+Three linear classifiers written from scratch — **perceptron**, **average perceptron** and **Pegasos** — trained live
+in your browser on 4,000 Amazon food reviews. Type a review, get the verdict, and see exactly which words decided it.
+
+[![Live demo](https://img.shields.io/badge/live%20demo-analyze%20a%20review-0f766e?style=for-the-badge&logo=github)](https://officiel-tinkerthink.github.io/Automatic-Review-Analyzer/)
+![From scratch](https://img.shields.io/badge/perceptron%20%C2%B7%20Pegasos-from%20scratch-c96a0e?style=for-the-badge)
+![Tests](https://img.shields.io/badge/tests-JS%20%2B%20pytest-2f6fd6?style=for-the-badge)
+
+<img src="assets/demo.gif" alt="Demo: typing reviews with live word-level explanations, training all three models, the hyper-parameter sweep and the most explanatory words" width="800">
+
+</div>
+
+---
+
+## The web app
+
+| Tab | What you can do |
+|---|---|
+| **Analyze** | Type any review. The verdict, the score θ·x + θ₀, every word coloured by its weight, and a ranked list of the words that decided it. Switch between the three models. |
+| **Train & compare** | Retrain all three on the 4,000 training reviews (in the course's fixed order) and watch validation accuracy per epoch. Toggle stopword removal, count features and bigrams. **Sweep T and λ** reproduces the project's tuning tables. |
+| **Words** | The most explanatory words — the biggest weights in θ — for each model. |
+| **Reviews** | Browse the 500 test reviews with predictions; filter to the mistakes; click one to analyse it. |
+
+Results match the course: ~80–82 % test accuracy for all three, with *delicious / great / loves / best* and
+*disappointed / bad / however / unfortunately* as the strongest words.
+
+<div align="center"><img src="assets/train.png" alt="Training curves and the T / λ sweep" width="800"></div>
+
+`docs/js/sentiment.js` ports `project1.py` one-to-one (same tokeniser, update rules and numerical guards) on sparse
+features; Pegasos applies its shrink lazily and the average perceptron uses the lazy-averaging trick, so a full
+25-epoch run of all three takes about a second in the browser.
+
+### Run locally
+
+```bash
+git clone https://github.com/Officiel-TinkerThink/Automatic-Review-Analyzer.git && cd Automatic-Review-Analyzer
+python3 -m http.server 8000 --directory docs      # or: npm start
+node --test tests/*.test.js                       # tokeniser, features, toy separability, course accuracy, lazy averaging
+pip install -r requirements.txt && pytest -q      # the original project1.py
+python3 main.py                                   # original script: trains Pegasos and prints the most explanatory words
+```
+
+---
+
+# The original project (MITx 6.86x, project 1)
 
 # Perceptron-Based Sentiment Analysis Project
 
